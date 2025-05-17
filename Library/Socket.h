@@ -1,3 +1,4 @@
+#pragma once
 #include <iostream>
 #include <cstring>
 #include <unistd.h>
@@ -10,31 +11,31 @@
 #include <stdexcept>
 #include <string>
 
+#include<memory>
 namespace Socket {
-
     constexpr char DEFAULT_PORT[] = "3000";
     constexpr int MaxDataSize = 4096;
-
+    void *connection_handler(void *socket_desc);
+    
     class Socket {
+    
     public:
-        Socket();
+        Socket(const std::string&);
         ~Socket();
         void SetupHints();
         void GetServerInfo(const std::string& port);
         void CreateSocket();
         void BindSocket();
         void ListenSocket();
-        void AcceptConnections();
-        static void* ConnectionHandler(void* socket_desc);
-
     private:
-        int serverSocket;
+        int serverSocket, clientSocket;
         struct addrinfo hints;
         struct addrinfo* serverInfo;
         struct sockaddr_in clientAddr;
         socklen_t clientAddrSize;
         int connections;
-        static void HandleError(const std::string& message);
+        //static void HandleError(const std::string& message);
+
     };
 
 }

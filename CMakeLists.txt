@@ -1,11 +1,18 @@
 cmake_minimum_required(VERSION 3.18)
 project(IRC LANGUAGES CXX)
 
+set(MAIN_SOURCE ${CMAKE_CURRENT_SOURCE_DIR}/main.cpp)
+
+file(GLOB LIBRARY_SOURCES "${CMAKE_CURRENT_SOURCE_DIR}/Library/*.cpp")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS}")
 set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} ${TORCH_CXX_FLAGS} " )
 set(CMAKE_C_COMPILER "/usr/bin/clang")
 set(CMAKE_CXX_COMPILER "/usr/bin/clang++")
 
-add_executable(${PROJECT_NAME} socket.cpp Library/StringUtil.cpp Library/Process.cpp)
+add_executable(${PROJECT_NAME} 
+    ${MAIN_SOURCE}
+    ${LIBRARY_SOURCES}
+)
 
+target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/Library)
 set_property(TARGET ${PROJECT_NAME} PROPERTY CXX_STANDARD 17)

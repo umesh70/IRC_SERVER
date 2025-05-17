@@ -1,0 +1,3 @@
+/home/cypher/project/IRC_SERVER/Library/CMakeFiles/IRC.dir
+/home/cypher/project/IRC_SERVER/Library/CMakeFiles/edit_cache.dir
+/home/cypher/project/IRC_SERVER/Library/CMakeFiles/rebuild_cache.dir

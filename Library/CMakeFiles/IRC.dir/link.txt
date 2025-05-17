@@ -1,0 +1,1 @@
+/usr/bin/clang++ CMakeFiles/IRC.dir/main.cpp.o CMakeFiles/IRC.dir/Process.cpp.o CMakeFiles/IRC.dir/Socket.cpp.o CMakeFiles/IRC.dir/StringUtil.cpp.o -o IRC 

@@ -1,6 +1,6 @@
 #include "Process.h"
 #include "StringUtil.h"
-
+#include "Socket.h"
 #include <algorithm>
 #include <iostream>
 
@@ -11,8 +11,10 @@ std::string Process::ArgProcess(int argc, char* argv[]) noexcept {
         return ServerMap.at(ReturnVal);
     
     std::string tmp = Util::RemoveWhitespace(argv[1]);
-    tmp = Util::IsLowerCase(tmp); // Assuming there's a ToLower function to handle case conversion.
-
+    bool check = Util::IsLowerCase(tmp); // Assuming there's a ToLower function to handle case conversion.
+    if(check == false){
+        exit(5);
+    }
     if (tmp == "start")
         ReturnVal = Process::Command::START;
     else if (tmp == "stop") 
@@ -28,30 +30,45 @@ std::string Process::ArgProcess(int argc, char* argv[]) noexcept {
         return ServerMap.at(ReturnVal);
     } else {
         std::cerr << "Invalid command provided." << std::endl;
-        return "Error: Invalid Command"; // or any other error handling
+        return "Error: Invalid Command";
     }
 }
 
 
 void Process::PostProcess(std::string ParsedCommand) noexcept
 {
-
-    switch (Process::CommandMap.at(ParsedCommand))
+    auto it = Process::CommandMap.find(ParsedCommand);
+    if (it == Process::CommandMap.end())
     {
+        std::cout << "Invalid" << std::endl;
+        return;
+    }
 
+    switch (it->second)
+    {
     case Process::Command::START:
-        // IRCServer server;
-        // server.listenOnSocket();
-        std::cout << "Server Start";
+        try
+        {
+            Socket::Socket SockObj(Socket::DEFAULT_PORT);
+            SockObj.ListenSocket();
+            std::cout << "Server Start" << std::endl;
+        }
+        catch (const std::exception& e)
+        {
+            std::cerr << "Failed to start server: " << e.what() << std::endl;
+        }
         break;
 
     case Process::Command::STOP:
-        std::cout << "Server stop";
+        std::cout << "Server stop" << std::endl;
         break;
+    
     case Process::Command::INVALID:
-        std::cout << "Invalid";
+        std::cout << "Invalid" << std::endl;
         break;
+    
     default:
+        std::cerr << "Unhandled command" << std::endl;
         break;
     }
 }
