@@ -12,6 +12,22 @@
 #include <string>
 
 #include<memory>
+
+
+// namespace baseSocket{
+//     constexpr char DEFAULT_PORT[] = "3000";
+//     constexpr int MaxDataSize = 4096;
+
+//     class baseSocker {
+//         private:        
+//         struct addrinfo hints;
+//         struct addrinfo* serverInfo;
+//         struct sockaddr_in clientAddr;
+//         socklen_t clientAddrSize;
+//         int connections;
+
+//     }
+// }
 namespace Socket {
     constexpr char DEFAULT_PORT[] = "3000";
     constexpr int MaxDataSize = 4096;
