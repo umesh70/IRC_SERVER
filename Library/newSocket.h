@@ -31,7 +31,7 @@ namespace baseSocket{
             void SetupHints();
             void GetServerInfo(const std::string& port);
             void CreateSocket();
-            void BindSocket();
             void ListenSocket();
+            void acceptConnection();
     };
 }

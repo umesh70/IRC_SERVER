@@ -1,2 +1,10 @@
 *.
 build
+CMakeFiles
+CMakeCache.txt
+cmake_install.cmake
+CTestTestfile.cmake
+Makefile
+IRC
+.vscode
+newSocket

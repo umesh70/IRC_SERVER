@@ -7,7 +7,6 @@ namespace baseSocket {
         SetupHints();
         GetServerInfo(port);
         CreateSocket();
-        BindSocket();
         ListenSocket();
     }
 
@@ -35,37 +34,48 @@ namespace baseSocket {
                 perror("server: socket");
                 continue;
             }
+            int yes = 1;
+            if (setsockopt(baseSocketDes, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(int)) == -1) {
+                perror("setsockopt");
+                exit(1);
+            }
+
 
             if (bind(baseSocketDes, p->ai_addr, p->ai_addrlen) == -1) {
                 close(baseSocketDes);
                 perror("server: bind");
                 continue;
             }
+        
             break; 
+        }
+        if (baseSocketDes == -1) {
+            std::cerr << "server: failed to bind" << std::endl;
+            exit(2);
         }   
     }
-    //bind the socket to the address and port
-    void baseSocket::BindSocket(){
-        int yes = 1;
-        if (setsockopt(baseSocketDes, SOL_SOCKET, SO_REUSEADDR, &yes, sizeof(yes)) == -1) {
-            perror("setsockopt");
-            exit(1);
-        }
-        if (listen(baseSocketDes, SOMAXCONN) == -1) {
+    void baseSocket::ListenSocket(){
+        if (listen(baseSocketDes,SOMAXCONN) == -1) {
             perror("listen");
             exit(1);
         }
-        std::cout << "SERVER: Waiting for connections..." << std::endl;
+        std::cout << "server: waiting for connections..." << std::endl;
+        
     }
+
     //listen for incoming connections
-    void baseSocket::ListenSocket(){
+    void baseSocket::acceptConnection(){
         clientAddrSize= sizeof(clientAddr);
-        baseSocketDes = accept(baseSocketDes, (struct sockaddr*)&clientAddr, &clientAddrSize);
-        if (baseSocketDes == -1) {
+        int clientSocket = accept(baseSocketDes, (struct sockaddr*)&clientAddr, &clientAddrSize);
+        if (clientSocket == -1) {
             std::cerr << "accept failed" << std::endl;
             return;
         }
         std::cout << "Connection accepted" << std::endl;
+        connections++;
+        std::cout << "Number of connections: " << connections << std::endl;
+        std::cout << "Client IP: " << inet_ntoa(clientAddr.sin_addr) << std::endl;
+        std::cout << "Client port: " << ntohs(clientAddr.sin_port) << std::endl;
     }
     
     baseSocket::~baseSocket() {
@@ -73,4 +83,15 @@ namespace baseSocket {
         close(baseSocketDes);
     }  
 
+}
+
+
+int main(){
+    baseSocket::baseSocket server("3000");
+
+    while (true) {
+        server.acceptConnection();
+    }
+
+    return 0;
 }
